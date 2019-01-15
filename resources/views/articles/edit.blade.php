@@ -1,0 +1,30 @@
+@extends('welcome')
+
+@section('content')
+<h1 class="text-center">Edit an article</h1>
+<div class="container">
+    <form action="/articles/{{ $article->id }}" enctype="multipart/form-data" method="post">
+        @csrf
+        @method('PUT')
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" class="form-control" value="{{ $article->title }}">
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <input type="text" name="category" id="category" class="form-control" value="{{ $article->category }}">
+        </div>
+        <div class="form-group">
+            <label for="body">Body:</label>
+            <textarea type="text" name="body" id="body" class="form-control" rows="8">{{ $article->body }}</textarea>
+        </div>
+
+
+        <div class="form-group">
+            <label for="articleImage">Upload article image</label>
+            <input type="file" class="form-control-file" id="image" name="image">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Post article</button>
+    </form>
+</div>
+@endsection
