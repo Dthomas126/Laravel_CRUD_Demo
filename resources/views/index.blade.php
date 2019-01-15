@@ -4,7 +4,7 @@
 <section class="container bg-secondary text-white mt-5">
     <header class="text-center">
         <h1 style="font-size: 10rem; ">The Average Developer</h1>
-        <p style="font-size: 1.5rem; "> A beginners guide to the world of development.</p>
+        <p style="font-size: 1.5rem; "> A beginners guide to web development using the Laravel framework.</p>
     </header>
 </section>
 
