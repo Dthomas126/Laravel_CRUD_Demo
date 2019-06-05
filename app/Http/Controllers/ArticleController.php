@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('auth')->except(['index','show']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -41,34 +45,45 @@ class ArticleController extends Controller
     {
         //store created data into db
 
-
-       $articleImage = $request->file('image');
-       //create new file image name with original image name and time appended to the end of image
-       $articleImageName = time().'_'.$articleImage->getClientOriginalName();
-
-       //store image in application (filepath: /storage/app/articleImages)
-       $articleImage->storeAs('public/articleImages',$articleImageName);
-
-       Article::create([
-           'title'=> $request->title,
-           'body'=>$request->body,
-           'category'=> $request->category,
-           'image'=>$articleImageName
+       $validated = $request->validate([
+           'title' => ['required',' max:255'],
+           'body'=> ['required'],
+           'category'=> ['required'],
+           'image'=> ['mimes:jpg,jpeg,png']
        ]);
 
+    //    retrieve image 
+       $articleImage = $request->file('image');
+       //create new file image name with original image name and time appended to the end of image
+       $articleImageName = time().$articleImage->getClientOriginalName();
+
+       //store image in application (filepath: /storage/app/articleImages)
+       $articleImage->storeAs('articleImages',$articleImageName);
 
 
+    //    Add user id to validate data
+      $validated['user_id'] = auth()->id();
+    $validated['image'] = $articleImageName;
+
+    //   Add article to DB
+       Article::create($validated );
+
+
+
+    //    Redirect back home
        return redirect('/');
 
     }
 
     /**
      * Display the specified resource.
-     *
+     *     * Display the specified resource.
+
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article)
+    public function show(Article $article)  
+
     {
         //
         return view('articles.show',compact('article'));
@@ -82,8 +97,21 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
+        // Only allow users who own the project to make any edits.
+      
+        // if($article->user_id !== (string)auth()->id()){
+        //     abort(403);
+        // }
+            //OR
+
+            //abort to 403 if auth user is not the owner
+        abort_if($article->user_id !== (string)auth()->id(),403);
+
+
         //edit existing articel 
         return view("articles.edit",compact('article'));
+        
+     
     }
 
     /**
@@ -95,6 +123,7 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
+        
         //update existing article
         $article->update(request(['title','body','category','image']));
 
@@ -114,4 +143,6 @@ class ArticleController extends Controller
 
         return redirect('/');
     }
+
+    
 }

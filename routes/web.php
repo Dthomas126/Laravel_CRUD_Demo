@@ -27,3 +27,10 @@ return view('pages.contact');
 });
 
 Route::post('/contact','ContactController@store');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+
+//COMMENTS
+Route::post('articles/{article}/comment','CommentController@store');

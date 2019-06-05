@@ -1,8 +1,11 @@
 @extends('welcome')
 
 @section('content')
+
     <h1 class="text-center">Create an article</h1>
     <div class="container">
+        @include('/inc/errors')
+        
         <form action="/articles" enctype="multipart/form-data"  method="post">
             @csrf
         <div class="form-group">

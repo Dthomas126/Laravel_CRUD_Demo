@@ -19,6 +19,11 @@
                 <a class="nav-link" href="/contact">Contact</a>
             </li>
         </ul>
-       <a href="/articles/create" class="btn btn-default">Create Article</a>
+       
+       <a href="/articles/create" class="btn btn-default"> <?php
+        if(Auth::check()){
+            echo "Create Article";
+        }
+        ?></a>
     </div>
 </nav>
